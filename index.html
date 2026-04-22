@@ -1,257 +1,305 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>InterviewIQ — Simulator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InterviewIQ — Simulator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 <div id="app">
 
-    <!-- ════════ GLOBAL TOP BAR (shown when logged in) ════════ -->
-    <div class="top-bar" id="topBar" style="display:none">
-        <div class="top-bar-left">
-            <span class="top-bar-logo">InterviewIQ</span>
-            <span class="top-bar-user" id="topBarUser">👋 Hi, User</span>
-            <span class="streak-badge" id="streakBadge">🔥 0</span>
+  //Global Top Bar
+  <div class="top-bar" id="topBar" style="display:none">
+    <div class="top-bar-left">
+      <span class="top-bar-logo">IQ</span> 
+      <span class="top-bar-user" id="topBarUser">👋 Hi, User</span>
+      <span class="streak-badge" id="streakBadge">🔥 0</span>
+    </div>
+    <div class="top-bar-right">
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <span class="theme-icon">🌙</span>
+      </button>
+      <button class="btn-logout" id="logoutBtn">Sign Out</button>
+    </div>
+  </div>
+
+  //Auth Screen
+  <div id="auth-screen" class="screen active">
+    <button class="theme-toggle auth-theme-btn" id="authThemeToggle">
+      <span class="theme-icon">🌙</span>
+    </button>
+
+    <div class="auth-layout">
+      <div class="auth-brand">
+        <div class="auth-brand-mark">IQ</div>
+        <h1 class="auth-title">InterviewIQ</h1>
+        <p class="auth-subtitle">Practice smarter. Land the role.</p>
+        <div class="auth-features">
+          <div class="auth-feature">✦ AI-powered question bank</div>
+          <div class="auth-feature">✦ Real-time evaluation</div>
+          <div class="auth-feature">✦ Progress tracking</div>
         </div>
-        <div class="top-bar-right">
-            <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
-            <button class="btn-logout" id="logoutBtn">Logout</button>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">Sign In</button>
+          <button class="auth-tab" id="registerTab" onclick="switchAuthTab('register')">Sign Up</button>
         </div>
+ 
+        <div id="loginForm">
+          <div class="form-group">
+            <label class="field-label">Email Address</label>
+            <div class="input-wrap">
+              <span class="input-icon">✉</span>
+              <input type="email" id="loginEmail" class="auth-input" placeholder="you@example.com" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="field-label">Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="loginPassword" class="auth-input" placeholder="Enter your password" />
+              <button class="pw-toggle" type="button" onclick="togglePw('loginPassword', this)">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="auth-error" id="loginError"></div>
+          <button class="btn-auth" onclick="handleLogin()">Sign In →</button>
+          <p class="auth-switch">Don't have an account? <a onclick="switchAuthTab('register')">Sign up free</a></p>
+        </div>
+ 
+        <div id="registerForm" style="display:none">
+          <div class="form-group">
+            <label class="field-label">Full Name / Username</label>
+            <div class="input-wrap">
+              <span class="input-icon">◎</span>
+              <input type="text" id="regUsername" class="auth-input" placeholder="What should we call you?" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="field-label">Email Address</label>
+            <div class="input-wrap">
+              <span class="input-icon">✉</span>
+              <input type="email" id="regEmail" class="auth-input" placeholder="you@example.com" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="field-label">Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="regPassword" class="auth-input" placeholder="Min. 6 characters" />
+              <button class="pw-toggle" type="button" onclick="togglePw('regPassword', this)">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="field-label">Confirm Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="regConfirm" class="auth-input" placeholder="Repeat your password" />
+              <button class="pw-toggle" type="button" onclick="togglePw('regConfirm', this)">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="auth-error" id="registerError"></div>
+          <button class="btn-auth" onclick="handleRegister()">Create Account →</button>
+          <p class="auth-switch">Already have an account? <a onclick="switchAuthTab('login')">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+//setup screen
+  <div id="setup-screen" class="screen">
+    <div class="setup-page">
+      <div class="setup-greeting">
+        <h2 class="setup-heading" id="setupHeading">Ready to practice?</h2>
+        <p class="setup-sub">Choose your role and difficulty to begin</p>
+      </div>
+
+      <div class="user-stats-strip" id="userStatsStrip">
+        <div class="stat-pill" id="statInterviews">📋 0 interviews</div>
+        <div class="stat-pill" id="statAvg">📊 Avg: —</div>
+        <div class="stat-pill" id="statStreak">🔥 0 day streak</div>
+      </div>
+
+      <div class="setup-card">
+        <div class="form-group">
+          <label class="field-label">Choose Job Role</label>
+          <div class="role-grid" id="roleGrid">
+            <div class="chip" data-role="Frontend Developer">Frontend Dev</div>
+            <div class="chip" data-role="Backend Developer">Backend Dev</div>
+            <div class="chip" data-role="AI/ML Engineer">AI / ML</div>
+            <div class="chip" data-role="HR Manager">HR Manager</div>
+            <div class="chip" data-role="Data Analyst">Data Analyst</div>
+            <div class="chip" data-role="Cybersecurity">Cybersecurity</div>
+            <div class="chip" data-role="DevOps Engineer">DevOps</div>
+            <div class="chip" data-role="Product Manager">Product Mgr</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">Difficulty Level</label>
+          <div class="diff-grid">
+            <div class="chip diff-chip diff-easy"   data-diff="Easy">
+              <span class="diff-icon">🌱</span>
+              <span class="diff-name">Easy</span>
+              <span class="diff-desc">Core concepts</span>
+            </div>
+            <div class="chip diff-chip diff-medium" data-diff="Medium">
+              <span class="diff-icon">⚡</span>
+              <span class="diff-name">Medium</span>
+              <span class="diff-desc">Deep dive</span>
+            </div>
+            <div class="chip diff-chip diff-hard"   data-diff="Hard">
+              <span class="diff-icon">🔥</span>
+              <span class="diff-name">Hard</span>
+              <span class="diff-desc">Expert level</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">Number of Questions</label>
+          <div class="count-grid">
+            <div class="chip qcount-chip" data-count="5"><span class="count-num">5</span><span class="count-sub">~10 min</span></div>
+            <div class="chip qcount-chip" data-count="10"><span class="count-num">10</span><span class="count-sub">~20 min</span></div>
+            <div class="chip qcount-chip" data-count="15"><span class="count-num">15</span><span class="count-sub">~30 min</span></div>
+          </div>
+        </div>
+
+        <button class="btn-start" id="startBtn" disabled>
+          <span>Start Interview</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+
+      <div class="history-card" id="historyCard" style="display:none">
+        <div class="section-title">Recent Sessions</div>
+        <div id="historyList"></div>
+      </div>
+    </div>
+  </div>
+
+//Interview Screen
+  <div id="interview-screen" class="screen">
+    <div class="interview-header">
+      <div class="progress-info">
+        <div class="q-label">Question</div>
+        <div class="q-counter">
+          <span id="qNum">1</span><span class="q-sep">/ <span id="qTotal">5</span></span>
+        </div>
+      </div>
+      <div class="interview-user-tag" id="interviewUserTag">👋 User</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="timer-ring">
+        <svg width="72" height="72" viewBox="0 0 60 60">
+          <circle class="timer-circle-bg" cx="30" cy="30" r="25"/>
+          <circle class="timer-circle-fg" id="timerCircle" cx="30" cy="30" r="25"/>
+        </svg>
+        <div class="timer-text" id="timerText">02:00</div>
+      </div>
     </div>
 
-    <!-- ════════ AUTH SCREEN ════════ -->
-    <div id="auth-screen" class="screen active">
-        <button class="theme-toggle auth-theme-btn" id="authThemeToggle" title="Toggle theme">🌙</button>
-
-        <div class="brand">
-            <div class="brand-tag">AI Interview Practice</div>
-            <h1>InterviewIQ</h1>
-            <p>Practice. Evaluate. Improve.</p>
-        </div>
-
-        <div class="auth-card">
-            <div class="auth-tabs">
-                <button class="auth-tab active" id="loginTab"    onclick="switchAuthTab('login')">Login</button>
-                <button class="auth-tab"        id="registerTab" onclick="switchAuthTab('register')">Register</button>
-            </div>
-
-            <!-- LOGIN -->
-            <div id="loginForm">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="loginUsername" class="auth-input" placeholder="Enter username" />
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="pw-wrap">
-                        <input type="password" id="loginPassword" class="auth-input" placeholder="Enter password" />
-                        <button class="pw-toggle" type="button" onclick="togglePw('loginPassword',this)">👁</button>
-                    </div>
-                </div>
-                <div class="auth-error" id="loginError"></div>
-                <button class="btn-auth" onclick="handleLogin()">Login →</button>
-            </div>
-
-            <!-- REGISTER -->
-            <div id="registerForm" style="display:none">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="regUsername" class="auth-input" placeholder="Choose a username" />
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="pw-wrap">
-                        <input type="password" id="regPassword" class="auth-input" placeholder="Choose a password" />
-                        <button class="pw-toggle" type="button" onclick="togglePw('regPassword',this)">👁</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <div class="pw-wrap">
-                        <input type="password" id="regConfirm" class="auth-input" placeholder="Repeat password" />
-                        <button class="pw-toggle" type="button" onclick="togglePw('regConfirm',this)">👁</button>
-                    </div>
-                </div>
-                <div class="auth-error" id="registerError"></div>
-                <button class="btn-auth" onclick="handleRegister()">Create Account →</button>
-            </div>
-        </div>
+    <div class="question-card" id="questionCard">
+      <div class="q-topic" id="qTopic">Topic</div>
+      <div class="q-text"  id="qText">Question goes here…</div>
     </div>
 
-    <!-- ════════ SETUP SCREEN ════════ -->
-    <div id="setup-screen" class="screen">
-        <div class="brand small-brand">
-            <div class="brand-tag">Ready to practice?</div>
-        </div>
-
-        <!-- User stats strip -->
-        <div class="user-stats-strip" id="userStatsStrip">
-            <div class="stat-pill" id="statInterviews">📋 0 interviews</div>
-            <div class="stat-pill" id="statAvg">📊 Avg: —</div>
-            <div class="stat-pill" id="statStreak">🔥 0 day streak</div>
-        </div>
-
-        <div class="setup-card">
-            <div class="form-group">
-                <label>Job Role</label>
-                <div class="role-grid" id="roleGrid">
-                    <div class="chip" data-role="Frontend Developer">Frontend Dev</div>
-                    <div class="chip" data-role="Backend Developer">Backend Dev</div>
-                    <div class="chip" data-role="AI/ML Engineer">AI / ML</div>
-                    <div class="chip" data-role="HR Manager">HR Manager</div>
-                    <div class="chip" data-role="Data Analyst">Data Analyst</div>
-                    <div class="chip" data-role="Cybersecurity">Cybersecurity</div>
-                    <div class="chip" data-role="DevOps Engineer">DevOps</div>
-                    <div class="chip" data-role="Product Manager">Product Mgr</div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Difficulty</label>
-                <div class="select-grid">
-                    <div class="chip diff-easy"   data-diff="Easy">🌱 Easy</div>
-                    <div class="chip diff-medium" data-diff="Medium">⚡ Medium</div>
-                    <div class="chip diff-hard"   data-diff="Hard">🔥 Hard</div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Number of Questions</label>
-                <div class="select-grid">
-                    <div class="chip qcount-chip" data-count="5">5 Qs</div>
-                    <div class="chip qcount-chip" data-count="10">10 Qs</div>
-                    <div class="chip qcount-chip" data-count="15">15 Qs</div>
-                </div>
-            </div>
-            <button class="btn-start" id="startBtn" disabled>Start Interview →</button>
-        </div>
-
-        <!-- Recent history -->
-        <div class="history-card" id="historyCard" style="display:none">
-            <div class="breakdown-title">📜 Recent Sessions</div>
-            <div id="historyList"></div>
-        </div>
+    <div class="answer-area">
+      <div class="answer-meta">
+        <span class="typing-badge" id="typingBadge">0 words</span>
+      </div>
+      <textarea id="answerInput" placeholder="Type your answer here…" rows="5"></textarea>
+      <div class="answer-actions">
+        <button class="btn-skip"   id="skipBtn">Skip →</button>
+        <button class="btn-submit" id="submitBtn">Submit Answer</button>
+      </div>
     </div>
+  </div>
 
-    <!-- ════════ INTERVIEW SCREEN ════════ -->
-    <div id="interview-screen" class="screen">
-        <div class="interview-header">
-            <div class="progress-info">
-                <div class="q-label">Question</div>
-                <div class="q-counter">
-                    <span id="qNum">1</span>
-                    <span>/ <span id="qTotal">5</span></span>
-                </div>
-            </div>
-            <div class="interview-user-tag" id="interviewUserTag">👋 User</div>
-            <div class="progress-bar-wrap">
-                <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
-            </div>
-            <div class="timer-ring">
-                <svg width="72" height="72" viewBox="0 0 60 60">
-                    <circle class="timer-circle-bg" cx="30" cy="30" r="25" />
-                    <circle class="timer-circle-fg" id="timerCircle" cx="30" cy="30" r="25" />
-                </svg>
-                <div class="timer-text" id="timerText">02:00</div>
-            </div>
-        </div>
-
-        <div class="question-card" id="questionCard">
-            <div class="q-topic" id="qTopic">Topic</div>
-            <div class="q-text"  id="qText">Question goes here…</div>
-        </div>
-
-        <div class="answer-area">
-            <div class="answer-meta">
-                <span class="typing-badge" id="typingBadge">0 words</span>
-            </div>
-            <textarea id="answerInput" placeholder="Type your answer here…" rows="5"></textarea>
-            <div class="answer-actions">
-                <button class="btn-skip"   id="skipBtn">Skip →</button>
-                <button class="btn-submit" id="submitBtn">Submit Answer</button>
-            </div>
-        </div>
+//Feedback Overlay
+  <div class="feedback-overlay" id="feedbackOverlay">
+    <div class="feedback-card">
+      <div class="feedback-emoji"      id="feedbackEmoji">🎯</div>
+      <div class="feedback-verdict"    id="feedbackVerdict">Good Answer!</div>
+      <div class="feedback-score-line" id="feedbackScoreLine">Score: 3/5 keywords matched</div>
+      <div class="keyword-row"         id="keywordRow"></div>
+      <button class="btn-next"         id="nextBtn">Next Question →</button>
     </div>
+  </div>
 
-    <!-- ════════ FEEDBACK OVERLAY ════════ -->
-    <div class="feedback-overlay" id="feedbackOverlay">
-        <div class="feedback-card">
-            <div class="feedback-emoji"      id="feedbackEmoji">🎯</div>
-            <div class="feedback-verdict"    id="feedbackVerdict">Good Answer!</div>
-            <div class="feedback-score-line" id="feedbackScoreLine">Score: 3/5 keywords matched</div>
-            <div class="keyword-row"         id="keywordRow"></div>
-            <button class="btn-next"         id="nextBtn">Next Question →</button>
+//Report Screen
+  <div id="report-screen" class="screen">
+    <div class="report-wrap">
+      <div class="report-header">
+        <div class="report-label">Session Complete</div>
+        <h2 id="reportTitle">Performance Report</h2>
+      </div>
+
+      <div class="score-hero">
+        <div class="score-ring">
+          <svg width="130" height="130" viewBox="0 0 120 120">
+            <circle class="score-ring-bg" cx="60" cy="60" r="54"/>
+            <circle class="score-ring-fg" id="scoreRingFg" cx="60" cy="60" r="54"/>
+          </svg>
+          <div class="score-ring-text">
+            <div class="score-big" id="scoreBig">0</div>
+            <div class="score-pct" id="scorePct">0%</div>
+          </div>
         </div>
-    </div>
-
-    <!-- ════════ REPORT SCREEN ════════ -->
-    <div id="report-screen" class="screen">
-        <div class="report-wrap">
-            <div class="report-header">
-                <div class="report-label">Interview Complete</div>
-                <h2 id="reportTitle">Performance Report</h2>
-            </div>
-
-            <div class="score-hero">
-                <div class="score-ring">
-                    <svg width="120" height="120" viewBox="0 0 120 120">
-                        <circle class="score-ring-bg" cx="60" cy="60" r="54" />
-                        <circle class="score-ring-fg" id="scoreRingFg" cx="60" cy="60" r="54" />
-                    </svg>
-                    <div class="score-ring-text">
-                        <div class="score-big" id="scoreBig">0</div>
-                        <div class="score-pct" id="scorePct">0%</div>
-                    </div>
-                </div>
-                <div class="score-meta">
-                    <div class="verdict-label" id="verdictLabel">—</div>
-                    <div class="verdict-sub"   id="verdictSub">—</div>
-                </div>
-            </div>
-
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="m-val m-good" id="mCorrect">0</div>
-                    <div class="m-label">Strong Answers</div>
-                </div>
-                <div class="metric-card">
-                    <div class="m-val m-avg" id="mAvg">0</div>
-                    <div class="m-label">Average</div>
-                </div>
-                <div class="metric-card">
-                    <div class="m-val m-bad" id="mWeak">0</div>
-                    <div class="m-label">Needs Work</div>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <div class="breakdown-title">Score per Question</div>
-                <canvas id="performanceChart"></canvas>
-            </div>
-
-            <div class="breakdown-card">
-                <div class="breakdown-title">Question Breakdown</div>
-                <div class="breakdown-list" id="breakdownList"></div>
-            </div>
-
-            <div class="breakdown-card" id="missedCard">
-                <div class="breakdown-title">🔑 Keywords to Study</div>
-                <div class="keyword-row" id="missedKeywords"></div>
-            </div>
-
-            <div class="report-actions">
-                <button class="btn-restart" id="restartBtn">↺ New Interview</button>
-                <button class="btn-history" id="historyBtn">📜 History</button>
-            </div>
+        <div class="score-meta">
+          <div class="verdict-label" id="verdictLabel">—</div>
+          <div class="verdict-sub"   id="verdictSub">—</div>
         </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="m-val m-good" id="mCorrect">0</div>
+          <div class="m-label">Strong</div>
+        </div>
+        <div class="metric-card">
+          <div class="m-val m-avg" id="mAvg">0</div>
+          <div class="m-label">Average</div>
+        </div>
+        <div class="metric-card">
+          <div class="m-val m-bad" id="mWeak">0</div>
+          <div class="m-label">Needs Work</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="section-title">Score per Question</div>
+        <canvas id="performanceChart"></canvas>
+      </div>
+
+      <div class="breakdown-card">
+        <div class="section-title">Question Breakdown</div>
+        <div class="breakdown-list" id="breakdownList"></div>
+      </div>
+
+      <div class="breakdown-card" id="missedCard">
+        <div class="section-title">Keywords to Study</div>
+        <div class="keyword-row" id="missedKeywords"></div>
+      </div>
+
+      <div class="report-actions">
+        <button class="btn-restart" id="restartBtn">↺ New Interview</button>
+        <button class="btn-history" id="historyBtn">📜 History</button>
+      </div>
     </div>
+  </div>
 
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="script.js"></script>
 </body>
